@@ -44,7 +44,8 @@ exports:
 Result
 -----------
 
-```{ 
+```
+{ 
   status: 500,
   loadingTime: 1189,
   loadEvent: false,
