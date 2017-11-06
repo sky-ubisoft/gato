@@ -1,0 +1,14 @@
+targets:
+  - name: app1
+    url: "https://www.google.com",
+    loadTimeout: 3000,
+    interval: 60000,
+    performance: true
+  - name: app2
+    url: "http://httpstat.us/500"
+
+exports:
+  httpServer:
+    port: 8080
+  stdout:
+    pretty: true
