@@ -1,5 +1,6 @@
-var { HttpServerExporter } = require('./exporters/httpServer');
-var { StdoutExporter } = require('./exporters/stdout');
+const { HttpServerExporter } = require('./exporters/httpServer');
+const { StdoutExporter } = require('./exporters/stdout');
+const { InfluxDbExporter } = require('./exporters/influxdb');
 
 class Exporter {
     constructor(exportsConfig){
@@ -13,6 +14,7 @@ class Exporter {
             switch (key) {
                 case "httpServer": this.exporters.push(new HttpServerExporter(exportsConfig[key])); break;
                 case "stdout": this.exporters.push(new StdoutExporter(exportsConfig[key])); break;
+                case "influxdb": this.exporters.push(new InfluxDbExporter(exportsConfig[key])); break;
             }
         }
     }

@@ -49,6 +49,22 @@ class Monitoring {
                         })
                     }, service.interval)
                 }, service.loadTimeout)
+            }).catch(error => {
+                var result = {
+                    status: 0,
+                    loadingTime: 0,
+                    loadEvent: false,
+                    url: service.url,
+                    name: service.name,
+                    jsError:false,
+                    ok: false
+                }
+                this.exporter.processResult(result, service);
+                setTimeout(() => {
+                    page.close().then(()=>{
+                        this.monitore(browser, service)
+                    })
+                }, service.interval)
             })
         })    
         });

@@ -15,6 +15,12 @@ const exportSchema = Joi.object().keys({
     }),
     stdout: Joi.object().keys({
         pretty: Joi.boolean().default(false)
+    }),
+    influxdb: Joi.object().keys({
+        host: Joi.string().required(),
+        database: Joi.string().required(),
+        measurement: Joi.string().required(),
+        port: Joi.number().default(8086)           
     })
 })
 
@@ -22,7 +28,7 @@ const exportSchema = Joi.object().keys({
 
 const schema = Joi.object().keys({
     targets: Joi.array().items(targetSchema).required(),
-    exports: exportSchema
+    exports: exportSchema 
 })
 
 class ConfigValidator {
