@@ -1,6 +1,6 @@
 targets:
   - name: app1
-    url: "https://www.google.com",
+    url: "https://www.google.com"
     loadTimeout: 3000,
     interval: 60000,
     performance: true
