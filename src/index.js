@@ -15,7 +15,3 @@ var exporter = new Exporter(config.exports);
 var monitor = new Monitoring(config.targets,exporter);
 
 monitor.start();
-
-
-
-
