@@ -4,7 +4,7 @@ class HttpServerExporter{
     constructor(config){
         this.allStatus = {};
         var app = express()
-        app.get('/', function (req, res) {
+        app.get('/', (req, res) => {
           res.send(this.allStatus)
         })
         app.listen(config.port, () => console.log('Exporter is listening port ' + config.port ))

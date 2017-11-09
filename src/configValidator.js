@@ -1,13 +1,14 @@
 const Joi = require('joi');
 const YAML = require('yamljs');
 
-const targetSchema = Joi.object().keys({
+const targetsSchema = Joi.object().keys({
     name: Joi.string().required(),
+    type: Joi.string().valid('api', 'spa'),
     url: Joi.string().required(),
     loadTimeout: Joi.number().default(2000),
-    interval: Joi.number().default(30*1000),
+    interval: Joi.number().default(30 * 1000),
     performance: Joi.boolean().default(false)
-})
+});
 
 const exportSchema = Joi.object().keys({
     httpServer: Joi.object().keys({
@@ -20,26 +21,26 @@ const exportSchema = Joi.object().keys({
         host: Joi.string().required(),
         database: Joi.string().required(),
         measurement: Joi.string().required(),
-        port: Joi.number().default(8086)           
+        port: Joi.number().default(8086)
     })
-})
+});
 
 
 
 const schema = Joi.object().keys({
-    targets: Joi.array().items(targetSchema).required(),
-    exports: exportSchema 
-})
+    targets: Joi.array().items(targetsSchema).required(),
+    exports: exportSchema
+});
 
 class ConfigValidator {
-    
-    constructor(path){
-        const {error, value} = Joi.validate(YAML.load(path), schema);
-        if(error) throw error;
+
+    constructor(path) {
+        const { error, value } = Joi.validate(YAML.load(path), schema);
+        if (error) throw error;
         this.config = value;
 
     }
-    getConfig(){
+    getConfig() {
         return this.config;
     }
 }
