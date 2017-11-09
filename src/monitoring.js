@@ -67,7 +67,10 @@ class Monitoring {
         })    
     }                
     start() {
-        puppeteer.launch().then((browser) => {
+        puppeteer.launch({args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
+        ]}).then((browser) => {
             this.check.forEach((service) => {
                 this.monitore(browser, service).then()
             })

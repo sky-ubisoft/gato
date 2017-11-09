@@ -1,6 +1,6 @@
 
-var { Exporter } = require('./Exporter');
-var { Monitoring } = require('./Monitoring');
+var { Exporter } = require('./exporter');
+var { Monitoring } = require('./monitoring');
 var { ConfigValidator } = require('./configValidator');
 
 var argv = require('minimist')(process.argv.slice(2));
