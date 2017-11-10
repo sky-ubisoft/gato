@@ -5,7 +5,6 @@ const targetsSchema = Joi.object().keys({
     name: Joi.string().required(),
     type: Joi.string().valid('api', 'spa'),
     url: Joi.string().required(),
-    loadTimeout: Joi.number().default(2000),
     interval: Joi.number().default(30 * 1000),
     performance: Joi.boolean().default(false)
 });

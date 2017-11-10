@@ -1,13 +1,13 @@
-var express = require('express');
+const express = require('express');
+const app = express()
 
 class HttpServerExporter{
     constructor(config){
         this.allStatus = {};
-        var app = express()
         app.get('/', (req, res) => {
           res.send(this.allStatus)
         })
-        app.listen(config.port, () => console.log('Exporter is listening port ' + config.port ))
+        app.listen(config.port, () => console.log('Web agent is listening on port ' + config.port ));
     }
     process(result,target){
         this.allStatus[target.name] = result;

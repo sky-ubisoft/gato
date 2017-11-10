@@ -1,13 +1,13 @@
 targets:
-  - name: app1
-    url: "https://www.google.com"
+  - name: test-dna-boards
     type: "spa"
-    loadTimeout: 3000,
-    interval: 60000,
+    url: "https://test-dna-boards"
+    interval: 10000
     performance: true
-  - name: app2
-    url: "http://httpstat.us/500"
+  - name: test-dna-wapi
     type: "api"
+    url: "https://test-dna-wapi/status"
+    interval: 10000
 
 exports:
   httpServer:
