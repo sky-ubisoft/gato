@@ -18,7 +18,7 @@ class Monitoring {
             page.on('pageerror', error => {
                 error = true;
             })
-            page.on('metrics', performance => {
+            page.on('metrics', perf => {
                 performance = perf.metrics;
             })
             page.on('load', msg => {
