@@ -17,7 +17,6 @@ class SpaMonitoring {
       }
 
       const response = await page.goto(service.url, { 'waitUntil': 'networkidle' });
-      // await page._client.send('Performance.enable')
       var loadingTime = Date.now() - startLoad;
       var loadEvent = false;
       var error = false;

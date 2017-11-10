@@ -28,6 +28,7 @@ class Monitoring {
             const monitoringInstance = new MonitoringClass(this.check, this.exporter);
             monitoringInstance.monitore(browser, service).then();
         });
+        process.on('exit', () => browser.close());
     }
 }
 

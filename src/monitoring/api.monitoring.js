@@ -7,7 +7,7 @@ class ApiMonitoring {
   }
   async monitore(browser, service) {
     try {
-      var startLoad = Date.now();
+      const startLoad = Date.now();
 
       let page;
       try {
@@ -17,11 +17,10 @@ class ApiMonitoring {
       }
 
       const response = await page.goto(service.url, { 'waitUntil': 'networkidle' });
-      // await page._client.send('Performance.enable')
-      var loadingTime = Date.now() - startLoad;
-      var loadEvent = false;
-      var error = false;
-      var performance = {};
+      const loadingTime = Date.now() - startLoad;
+      let loadEvent = false;
+      let error = false;
+      const performance = {};
       page.on('pageerror', error => {
         error = true;
       });
