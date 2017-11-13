@@ -1,34 +1,27 @@
-const puppeteer = require('puppeteer');
-const { ApiMonitoring } = require('./api.monitoring.js');
-const { SpaMonitoring } = require('./spa.monitoring.js');
-
 class Monitoring {
-    constructor(check, exporter) {
+    constructor({targets}, exporter, browserFactory) {
         this.exporter = exporter;
-        this.check = check;
+        this.targets = targets;
+        this.browserFactory = browserFactory;
     }
     async start() {
-        const browser = await puppeteer.launch({
-            args: [
-                '--no-sandbox',
-                '--disable-setuid-sandbox'
-            ]
-        });
-        this.check.forEach(service => {
-            let MonitoringClass;
-            switch (service.type) {
-                case 'api':
-                    MonitoringClass = ApiMonitoring;
-                    break;
-                default:
-                case 'spa':
-                    MonitoringClass = SpaMonitoring;
-                    break;
+        this.browser = await this.browserFactory.getBrowser();
+        this.targets.forEach(target => {
+            let monitoringPlugin;
+            try {
+                monitoringPlugin = require(`./plugins/${target.type}/index.js`);
+            } catch(e) {
+                try {
+                    monitoringPlugin = require(target.type);
+                } catch(e) {
+                console.error(`Plugins ${target.type} is not found, please install it`);
+                process.exit(e.code);
+                }
             }
-            const monitoringInstance = new MonitoringClass(this.check, this.exporter);
-            monitoringInstance.monitore(browser, service).then();
+            const monitoringInstance = new monitoringPlugin.default(target, this.exporter, this.browser);
+            monitoringInstance.monitore().then();
         });
-        process.on('exit', () => browser.close());
+        process.on('exit', () => this.browser.close());
     }
 }
 

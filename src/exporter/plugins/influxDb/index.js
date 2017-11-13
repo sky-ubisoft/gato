@@ -1,15 +1,28 @@
 const Influx = require('influx');
+const Joi = require('Joi');
+
+const schema = Joi.object().keys({
+    host: Joi.string().required(),
+    database: Joi.string().required(),
+    measurement: Joi.string().required(),
+    port: Joi.number().default(8086)
+});
+
 
 class InfluxDbExporter{
     constructor(config){
+        const { error, value } = Joi.validate(config, schema);
+        if(error) throw error;
+        this.config = value;
+
         this.measurement = config.measurement;
         this.influx = new Influx.InfluxDB({
-            host: config.host,
-            port: config.port,
-            database: config.database,
+            host:  this.config.host,
+            port:  this.config.port,
+            database:  this.config.database,
             schema: [
               {
-                measurement: config.measurement,
+                measurement:  this.config.measurement,
                 fields: {
                   status: Influx.FieldType.INTEGER,
                   loadingTime: Influx.FieldType.INTEGER,
@@ -47,4 +60,4 @@ class InfluxDbExporter{
     }
 }
 
-exports.InfluxDbExporter = InfluxDbExporter;
+exports.default = InfluxDbExporter;

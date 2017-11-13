@@ -1,34 +1,18 @@
 const Joi = require('joi');
 const YAML = require('yamljs');
 
-const targetsSchema = Joi.object().keys({
-    name: Joi.string().required(),
-    type: Joi.string().valid('api', 'spa'),
-    url: Joi.string().required(),
-    interval: Joi.number().default(30 * 1000),
-    performance: Joi.boolean().default(false)
-});
-
-const exportSchema = Joi.object().keys({
-    httpServer: Joi.object().keys({
-        port: Joi.number().default(8080)
-    }),
-    stdout: Joi.object().keys({
-        pretty: Joi.boolean().default(false)
-    }),
-    influxdb: Joi.object().keys({
-        host: Joi.string().required(),
-        database: Joi.string().required(),
-        measurement: Joi.string().required(),
-        port: Joi.number().default(8086)
+const configSchema = Joi.object().keys({
+    chromium: Joi.object().keys({
+        ignoreCertificateErrors: Joi.bool()
     })
-});
+}).default({});
 
 
 
 const schema = Joi.object().keys({
-    targets: Joi.array().items(targetsSchema).required(),
-    exports: exportSchema
+    targets: Joi.array().required(),
+    exports: Joi.object().required(),
+    gato: configSchema
 });
 
 class ConfigValidator {
