@@ -1,12 +1,11 @@
 targets:
-  - name: test-dna-boards
+  - name: dna-viewer
     type: "spa"
-    url: "https://test-dna-boards"
+    url: "https://dna-viewer.ubisoft.org"
     interval: 10000
-    performance: true
-  - name: test-dna-wapi
-    type: "api"
-    url: "https://test-dna-wapi/status"
+  - name: uat-dna-viewer
+    type: "spa"
+    url: "https://uat-dna-viewer.ubisoft.org"
     interval: 10000
 
 exports:
@@ -18,4 +17,5 @@ exports:
 gato:
   chromium:
     ignoreCertificateErrors: true
+    headless: false
 

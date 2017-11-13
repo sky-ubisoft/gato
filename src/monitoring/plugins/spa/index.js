@@ -29,7 +29,7 @@ class SpaMonitoring {
 
       }
 
-      const response = await page.goto(this.target.url, { 'waitUntil': 'networkidle' });
+      const response = await page.goto(this.target.url, { 'waitUntil': 'networkidle', 'timeout': 3000000  });
       var loadingTime = Date.now() - startLoad;
       var loadEvent = false;
       var error = false;

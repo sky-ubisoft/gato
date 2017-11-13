@@ -2,19 +2,21 @@ const puppeteer = require('puppeteer');
 
 class BrowserFactory {
         
-        constructor(chromiumConfig) {
+        constructor({chromium}) {
             this.args = [
+                ' --dissable-gpu',
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
             ];
-    
-            if(chromiumConfig && chromiumConfig.ignoreCertificateErrors){
-                this.args.push('--ignore-certificate-errors')
+            this.headless = chromium.headless;
+            if(chromium.ignoreCertificateErrors){
+                this.args.push('--ignore-certificate-errors');
             }
         }
         getBrowser() {
             return puppeteer.launch({
-                args: this.args
+                args: this.args,
+                headless: this.headless
             });
         }
     }

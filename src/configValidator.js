@@ -3,9 +3,10 @@ const YAML = require('yamljs');
 
 const configSchema = Joi.object().keys({
     chromium: Joi.object().keys({
-        ignoreCertificateErrors: Joi.bool()
+        ignoreCertificateErrors: Joi.bool().default(false),
+        headless: Joi.boolean().default(true)
     })
-}).default({});
+});
 
 
 
