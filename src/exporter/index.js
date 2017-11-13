@@ -1,28 +1,25 @@
-const { HttpServerExporter } = require('./plugins/httpServer');
-const { StdoutExporter } = require('./plugins/stdout');
-const { InfluxDbExporter } = require('./plugins/influxdb');
-
 class Exporter {
-    constructor(exportsConfig){
+    constructor(exportersConfig){
         this.stdout = {active:false};
         this.allStatus = {};
         this.httpMode = false;
         this.exporters = [];
-        
-        for (var key in exportsConfig) {
+        exportersConfig.forEach((exporterConfig) => {
+            const key = exporterConfig.type;  
+            let plugins;
+            if(!key) throw 'Exporter type is missing'
             try {
-                const plugins = require(`./plugins/${key}/index.js`);
-                this.exporters.push(new plugins.default(exportsConfig[key]));
+                plugins = require(`./plugins/${key}/index.js`);
             } catch(e) {
                 try {
-                    const plugins = require(key);
-                    this.exporters.push(new plugins.default(exportsConfig[key]));
+                    plugins = require(key);
                 } catch(e) {
                 console.error(`Plugins ${key} is not found, please install it`);
                 process.exit(e.code);
                 }
             }
-        }
+            this.exporters.push(new plugins.default(exporterConfig));
+        })
     }
     processResult(result, target){
         this.exporters.forEach((exporter) => {

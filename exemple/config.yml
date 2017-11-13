@@ -10,9 +10,12 @@ targets:
     interval: 10000
 
 exports:
-  httpServer:
+  - type: httpServer
     port: 8080
-  stdout:
+  - type: stdout
     pretty: true
 
+gato:
+  chromium:
+    ignoreCertificateErrors: true
 

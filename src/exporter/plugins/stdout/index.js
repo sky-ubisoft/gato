@@ -1,7 +1,8 @@
 const Joi = require('Joi');
 
 const schema = Joi.object().keys({
-    pretty: Joi.boolean().default(false)
+    pretty: Joi.boolean().default(false),
+    type: Joi.string()
 });
 
 class StdoutExporter{

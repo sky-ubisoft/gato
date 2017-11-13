@@ -11,7 +11,7 @@ const configSchema = Joi.object().keys({
 
 const schema = Joi.object().keys({
     targets: Joi.array().required(),
-    exports: Joi.object().required(),
+    exports: Joi.array().required(),
     gato: configSchema
 });
 

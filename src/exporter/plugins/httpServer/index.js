@@ -3,7 +3,8 @@ const Joi = require('joi');
 const app = express();
 
 const schema = Joi.object().keys({
-    port: Joi.number().default(8080)
+    port: Joi.number().default(8080),
+    type: Joi.string()
 });
 
 class HttpServerExporter{

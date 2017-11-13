@@ -5,7 +5,8 @@ const schema = Joi.object().keys({
     host: Joi.string().required(),
     database: Joi.string().required(),
     measurement: Joi.string().required(),
-    port: Joi.number().default(8086)
+    port: Joi.number().default(8086),
+    type: Joi.string()
 });
 
 
