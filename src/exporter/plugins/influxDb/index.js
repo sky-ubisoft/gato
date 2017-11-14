@@ -1,5 +1,5 @@
 const Influx = require('influx');
-const Joi = require('Joi');
+const Joi = require('joi');
 
 const schema = Joi.object().keys({
     host: Joi.string().required(),
