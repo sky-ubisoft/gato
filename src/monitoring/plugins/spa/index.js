@@ -28,7 +28,7 @@ class SpaMonitoring {
       } catch (err) {
 
       }
-
+      page.setExtraHTTPHeaders({ 'upgrade-insecure-requests': '0' });
       const response = await page.goto(this.target.url, { 'waitUntil': 'networkidle', 'timeout': 3000000  });
       var loadingTime = Date.now() - startLoad;
       var loadEvent = false;
