@@ -9,11 +9,12 @@ class Exporter {
             let plugins;
             if(!key) throw 'Exporter type is missing'
             try {
-                plugins = require(`./plugins/${key}/index.js`);
+                plugins = require(`./plugins/${key.trim()}/index.js`);
             } catch(e) {
                 try {
                     plugins = require(key);
                 } catch(e) {
+                console.log(e);
                 console.error(`Plugins ${key} is not found, please install it`);
                 process.exit(e.code);
                 }
