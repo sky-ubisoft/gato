@@ -4,7 +4,6 @@ class BrowserFactory {
         
         constructor({chromium}) {
             this.args = [
-                ' --dissable-gpu',
                 '--no-sandbox',
                 '--disable-setuid-sandbox'
             ];
@@ -14,9 +13,11 @@ class BrowserFactory {
             }
         }
         getBrowser() {
+            console.log(this.args)
             return puppeteer.launch({
                 args: this.args,
-                headless: this.headless
+                headless: this.headless,
+                ignoreHTTPSErrors: true
             });
         }
     }
