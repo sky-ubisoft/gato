@@ -11,14 +11,16 @@ class BrowserFactory {
             if(chromium.ignoreCertificateErrors){
                 this.args.push('--ignore-certificate-errors');
             }
+
+            this.config = {
+                args: this.args,
+                headless: this.headless,
+                ignoreHTTPSErrors: chromium.ignoreCertificateErrors
+            };
         }
         getBrowser() {
             console.log(this.args)
-            return puppeteer.launch({
-                args: this.args,
-                headless: this.headless,
-                ignoreHTTPSErrors: true
-            });
+            return puppeteer.launch(this.config);
         }
     }
 exports.BrowserFactory = BrowserFactory;

@@ -5,7 +5,8 @@ const schema = Joi.object().keys({
   type: Joi.string().valid('api', 'spa'),
   url: Joi.string().required(),
   interval: Joi.number().default(30 * 1000),
-  performance: Joi.boolean().default(false)
+  performance: Joi.boolean().default(false),
+  headers: Joi.object().default({})
 });
 
 
