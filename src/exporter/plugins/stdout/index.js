@@ -1,4 +1,4 @@
-const Joi = require('Joi');
+const Joi = require('joi');
 
 const schema = Joi.object().keys({
     pretty: Joi.boolean().default(false),
