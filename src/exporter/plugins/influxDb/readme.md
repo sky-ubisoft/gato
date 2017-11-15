@@ -6,7 +6,7 @@ This plugins allow your to export data to influxdb
 ### Exemple ###
 	exports:
 		  - type: influxDb
-			database: mybd.foo.com
+		    database: mybd.foo.com
 		    port: 8086
 		    database: gato
 		    measurement: loadingtime
