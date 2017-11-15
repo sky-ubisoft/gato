@@ -1,9 +1,9 @@
 
-##InfluxDB##
+### InfluxDB ###
 
 This plugins allow your to export data to influxdb
 
-###Exemple###
+### Exemple ###
 	exports:
 		  - type: influxDb
 			database: mybd.foo.com
@@ -11,12 +11,12 @@ This plugins allow your to export data to influxdb
 		    database: gato
 		    measurement: loadingtime
 
-###Options###
+### Options ###
 
 | Name  |Type|Description|Required|
 |---|----|-----------|--------|
 |*host*|`string`||True|
-|database|`string`||True|
-|measurement|`string`||True|
-|port|`integer`||No, default: `8086`|
+|*database*|`string`||True|
+|*measurement*|`string`||True|
+|*port*|`integer`||No, default: `8086`|
 
