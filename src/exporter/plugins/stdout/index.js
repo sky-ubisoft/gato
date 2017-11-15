@@ -5,18 +5,18 @@ const schema = Joi.object().keys({
     type: Joi.string()
 });
 
-class StdoutExporter{
-    constructor(config){
+class StdoutExporter {
+    constructor(config) {
         const { error, value } = Joi.validate(config, schema);
-        if(error) throw error
+        if (error) throw error
         this.config = value;
         this.pretty = this.config.pretty;
     }
-    process(result,target){
-        if(!this.pretty){
-            console.log(result);   
-        }else{
-            console.dir(result, {depth: null, colors: true})
+    process(result, target) {
+        if (!this.pretty) {
+            console.log(result);
+        } else {
+            console.dir(result, { depth: null, colors: true })
         }
     }
 }

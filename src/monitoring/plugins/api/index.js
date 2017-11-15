@@ -14,7 +14,7 @@ class ApiMonitoring {
   constructor(config, exporter, browser) {
 
     const { error, value } = Joi.validate(config, schema);
-    if(error) throw error
+    if (error) throw error
     this.target = value;
     this.exporter = exporter;
     this.browser = browser;
