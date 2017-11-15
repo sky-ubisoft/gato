@@ -19,10 +19,9 @@ class SpaMonitoring {
     this.browser = browser;
   }
   async monitore() {
+    let page;
     try {
       var startLoad = Date.now();
-
-      let page;
       try {
         page = await this.browser.newPage();
       } catch (err) {

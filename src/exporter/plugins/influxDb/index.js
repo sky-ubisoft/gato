@@ -17,6 +17,7 @@ class InfluxDbExporter{
         this.config = value;
 
         this.measurement = config.measurement;
+        this.influx = {};
         this.influx = new Influx.InfluxDB({
             host:  this.config.host,
             port:  this.config.port,
@@ -40,24 +41,63 @@ class InfluxDbExporter{
             ]
            })
     }
+
     process(result,target){
+        const db  = this.influx[target.type.toLoweCase()];
+        if(!db) {
+            db =  this.instantiateDb(result,target);
+            this.influx[target.type.toLoweCase()] = db;
+        }
         result = this.sanitize(result);
         this.influx.writePoints([
             {
-              measurement: this.measurement,
+              measurement: target.type,
               tags: { service: target.name },
               fields: result,
             }
           ]).then(console.log).catch(console.log)
     }
     sanitize(result){
+        const resultClean = {}
         for (var key in result) {
             if(typeof(result[key]) === "boolean"){
-                result[key] = result[key] ? 1 : 0;
+                resultClean[key] = result[key] ? 1 : 0;
+            }
+            if(typeof(result[key]) === "string" || typeof(result[key]) === "number"){
+                resultClean[key] = result[key];
             }
         }
         
-        return result
+        return resultClean
+    }
+    instantiateDb(result,target){
+        const fields = {};
+        for (var key in result) {
+            if(typeof(result[key]) === "number"){
+                field[key] = Influx.FieldType.FLOAT;
+            }
+            if(typeof(result[key]) === "string"){
+                field[key] = Influx.FieldType.STRING;
+            }
+            if(typeof(result[key]) === "boolean"){
+                field[key] = Influx.FieldType.INTEGER;
+            }
+        }
+
+        return new Influx.InfluxDB({
+            host:  this.config.host,
+            port:  this.config.port,
+            database:  this.config.database,
+            schema: [
+              {
+                measurement:  target.type,
+                fields: fields,
+                tags: [
+                  'service'
+                ]
+              }
+            ]
+           })
     }
 }
 
