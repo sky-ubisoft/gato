@@ -1,5 +1,7 @@
+const { logger, levels } = require('../logger');
+
 class Monitoring {
-    constructor({targets}, exporter, browserFactory) {
+    constructor({ targets }, exporter, browserFactory) {
         this.exporter = exporter;
         this.targets = targets;
         this.browserFactory = browserFactory;
@@ -10,18 +12,17 @@ class Monitoring {
             let monitoringPlugin;
             try {
                 monitoringPlugin = require(`./plugins/${target.type}/index.js`);
-            } catch(e) {
+            } catch (e) {
                 try {
                     monitoringPlugin = require(target.type);
-                } catch(e) {
-                console.error(`Plugins ${target.type} is not found, please install it`);
-                process.exit(e.code);
+                } catch (e) {
+                    logger.log({ level: levels.error, message: `Monitoring::start - ${target.name} - ${e.toString()}` });
+                    process.exit(e.code);
                 }
             }
             const monitoringInstance = new monitoringPlugin.default(target, this.exporter, this.browser);
             monitoringInstance.monitore().then();
         });
-        process.on('exit', () => this.browser.close());
     }
 }
 

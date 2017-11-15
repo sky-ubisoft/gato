@@ -1,5 +1,6 @@
 const Influx = require('influx');
 const Joi = require('joi');
+const { logger, levels } = require('../../../logger');
 
 const schema = Joi.object().keys({
     host: Joi.string().required(),
@@ -10,37 +11,39 @@ const schema = Joi.object().keys({
 });
 
 
-class InfluxDbExporter{
-    constructor(config){
+class InfluxDbExporter {
+    constructor(config) {
         const { error, value } = Joi.validate(config, schema);
-        if(error) throw error;
+        if (error) throw error;
         this.config = value;
 
         this.measurement = config.measurement;
         this.influx = {};
         this.influx = new Influx.InfluxDB({
-            host:  this.config.host,
-            port:  this.config.port,
-            database:  this.config.database,
+            host: this.config.host,
+            port: this.config.port,
+            database: this.config.database,
             schema: [
-              {
-                measurement:  this.config.measurement,
-                fields: {
-                  status: Influx.FieldType.INTEGER,
-                  loadingTime: Influx.FieldType.INTEGER,
-                  loadEvent: Influx.FieldType.INTEGER,
-                  url: Influx.FieldType.STRING,
-                  name: Influx.FieldType.STRING,
-                  jsError:Influx.FieldType.INTEGER,
-                  ok: Influx.FieldType.INTEGER
-                },
-                tags: [
-                  'service'
-                ]
-              }
+                {
+                    measurement: this.config.measurement,
+                    fields: {
+                        status: Influx.FieldType.INTEGER,
+                        loadingTime: Influx.FieldType.INTEGER,
+                        loadEvent: Influx.FieldType.INTEGER,
+                        url: Influx.FieldType.STRING,
+                        name: Influx.FieldType.STRING,
+                        jsError: Influx.FieldType.INTEGER,
+                        ok: Influx.FieldType.INTEGER
+                    },
+                    tags: [
+                        'service'
+                    ]
+                }
             ]
-           })
+        })
+        process.on('exit', () => this.influx.close());        
     }
+<<<<<<< HEAD
 
     process(result,target){
         const db  = this.influx[target.type.toLoweCase()];
@@ -54,9 +57,23 @@ class InfluxDbExporter{
               measurement: target.type,
               tags: { service: target.name },
               fields: result,
+=======
+    process(result, target) {
+        result = this.sanitize(result);
+        this.influx.writePoints([
+            {
+                measurement: this.measurement,
+                tags: { service: target.name },
+                fields: result,
+>>>>>>> ee665c35d7a774af1f096b6340e90fab2fa78f5e
             }
-          ]).then(console.log).catch(console.log)
+        ]).then(data => {
+            logger.log({ level: levels.info, message: `InfluxDbExporter::process - ${target.name}` });
+        }).catch(err => {
+            logger.log({ level: levels.error, message: `InfluxDbExporter::process - ${target.name} - ${err}` });
+        })
     }
+<<<<<<< HEAD
     sanitize(result){
         const resultClean = {}
         for (var key in result) {
@@ -98,6 +115,16 @@ class InfluxDbExporter{
               }
             ]
            })
+=======
+    sanitize(result) {
+        for (var key in result) {
+            if (typeof (result[key]) === "boolean") {
+                result[key] = result[key] ? 1 : 0;
+            }
+        }
+
+        return result
+>>>>>>> ee665c35d7a774af1f096b6340e90fab2fa78f5e
     }
 }
 

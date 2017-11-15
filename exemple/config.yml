@@ -4,10 +4,14 @@ targets:
     url: "https://test-dna-boards"
     interval: 10000
     performance: true
+    headers:
+      upgrade-insecure-requests: "0"
   - name: test-dna-wapi
     type: "api"
     url: "https://test-dna-wapi/status"
     interval: 10000
+    headers:
+      upgrade-insecure-requests: "0"
 
 
 exports:
