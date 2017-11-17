@@ -1,6 +1,5 @@
 const { logger, levels } = require('../logger');
 
-
 class Monitoring {
     constructor({ targets }, exporter, browserFactory) {
         this.exporter = exporter;
