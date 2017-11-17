@@ -13,6 +13,8 @@ class Exporter {
             try {
                 plugins = require(`./plugins/${key.trim()}/index.js`);
             } catch (e) {
+
+                console.log(e);
                 try {
                     plugins = require(key);
                 } catch (e) {
@@ -26,7 +28,6 @@ class Exporter {
     processResult(result, target) {
         this.exporters.forEach((exporter) => {
             exporter.process(result, target);
-            console.trace(exporter)
         });
     }
 }

@@ -1,5 +1,6 @@
 const { logger, levels } = require('../logger');
 
+
 class Monitoring {
     constructor({ targets }, exporter, browserFactory) {
         this.exporter = exporter;
@@ -21,7 +22,12 @@ class Monitoring {
                 }
             }
             const monitoringInstance = new monitoringPlugin.default(target, this.exporter, this.browser);
-            monitoringInstance.monitore().then();
+            setInterval(()=>{
+                monitoringInstance.monitore()
+                .then((result)=> {
+                    this.exporter.processResult(result,target)
+                })
+            }, target.interval)
         });
     }
 }

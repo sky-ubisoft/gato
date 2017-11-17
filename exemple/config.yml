@@ -1,17 +1,8 @@
 targets:
-  - name: test-dna-boards
-    type: "spa"
-    url: "https://test-dna-boards"
-    interval: 10000
-    performance: true
-    headers:
-      upgrade-insecure-requests: "0"
   - name: test-dna-wapi
-    type: "api"
-    url: "https://test-dna-wapi/status"
+    type: "spa"
+    url: "https://ubisoft.com"
     interval: 10000
-    headers:
-      upgrade-insecure-requests: "0"
 
 
 exports:

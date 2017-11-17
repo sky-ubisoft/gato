@@ -43,7 +43,6 @@ class InfluxDbExporter {
         })
         process.on('exit', () => this.influx.close());        
     }
-<<<<<<< HEAD
 
     process(result,target){
         const db  = this.influx[target.type.toLoweCase()];
@@ -57,15 +56,6 @@ class InfluxDbExporter {
               measurement: target.type,
               tags: { service: target.name },
               fields: result,
-=======
-    process(result, target) {
-        result = this.sanitize(result);
-        this.influx.writePoints([
-            {
-                measurement: this.measurement,
-                tags: { service: target.name },
-                fields: result,
->>>>>>> ee665c35d7a774af1f096b6340e90fab2fa78f5e
             }
         ]).then(data => {
             logger.log({ level: levels.info, message: `InfluxDbExporter::process - ${target.name}` });
@@ -73,7 +63,6 @@ class InfluxDbExporter {
             logger.log({ level: levels.error, message: `InfluxDbExporter::process - ${target.name} - ${err}` });
         })
     }
-<<<<<<< HEAD
     sanitize(result){
         const resultClean = {}
         for (var key in result) {
@@ -115,16 +104,6 @@ class InfluxDbExporter {
               }
             ]
            })
-=======
-    sanitize(result) {
-        for (var key in result) {
-            if (typeof (result[key]) === "boolean") {
-                result[key] = result[key] ? 1 : 0;
-            }
-        }
-
-        return result
->>>>>>> ee665c35d7a774af1f096b6340e90fab2fa78f5e
     }
 }
 
