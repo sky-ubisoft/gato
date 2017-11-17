@@ -37,9 +37,9 @@ class SpaMonitoring {
         temp[headerKey] = this.target.headers[headerKey];
         page.setExtraHTTPHeaders(temp);
       }
-      
+
       const response = await page.goto(this.target.url, { 'waitUntil': 'networkidle', 'timeout': 3000000 });
-      
+
       result = {
         status: response.status,
         loadingTime: Date.now() - startLoad,
@@ -63,4 +63,4 @@ class SpaMonitoring {
   }
 }
 
-exports.default = SpaMonitoring
+module.exports = SpaMonitoring;
