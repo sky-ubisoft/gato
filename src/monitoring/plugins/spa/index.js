@@ -9,7 +9,7 @@ function delay(t) {
 
 const schema = Joi.object().keys({
   name: Joi.string().required(),
-  type: Joi.string().valid('api', 'spa'),
+  type: Joi.string().valid('spa'),
   url: Joi.string().required(),
   interval: Joi.number().default(30 * 1000),
   performance: Joi.boolean().default(false),
@@ -32,14 +32,12 @@ class SpaMonitoring {
       const startLoad = Date.now();
       page = await this.browser.newPage();
 
-      for (var headerKey in this.target.headers) {
-        const temp = {};
-        temp[headerKey] = this.target.headers[headerKey];
-        page.setExtraHTTPHeaders(temp);
-      }
-      
+      Object.keys(this.target.headers).map(headerName => {
+        page.setExtraHTTPHeaders({ [headerName]: this.target.headers[headerName] });
+      });
+
       const response = await page.goto(this.target.url, { 'waitUntil': 'networkidle', 'timeout': 3000000 });
-      
+
       result = {
         status: response.status,
         loadingTime: Date.now() - startLoad,
@@ -63,4 +61,4 @@ class SpaMonitoring {
   }
 }
 
-exports.default = SpaMonitoring
+module.exports = SpaMonitoring;

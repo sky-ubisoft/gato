@@ -1,6 +1,5 @@
 const { logger, levels } = require('../logger');
 
-
 class Monitoring {
     constructor({ targets }, exporter, browserFactory) {
         this.exporter = exporter;
@@ -10,24 +9,22 @@ class Monitoring {
     async start() {
         this.browser = await this.browserFactory.getBrowser();
         this.targets.forEach(target => {
-            let monitoringPlugin;
+            let MonitoringPlugin;
             try {
-                monitoringPlugin = require(`./plugins/${target.type}/index.js`);
+                MonitoringPlugin = require(`./plugins/${target.type}/index.js`);
             } catch (e) {
                 try {
-                    monitoringPlugin = require(target.type);
+                    MonitoringPlugin = require(target.type);
                 } catch (e) {
                     logger.log({ level: levels.error, message: `Monitoring::start - ${target.name} - ${e.toString()}` });
                     process.exit(e.code);
                 }
             }
-            const monitoringInstance = new monitoringPlugin.default(target, this.exporter, this.browser);
-            setInterval(()=>{
-                monitoringInstance.monitore()
-                .then((result)=> {
-                    this.exporter.processResult(result,target)
-                })
-            }, target.interval)
+            const monitoringInstance = new MonitoringPlugin(target, this.exporter, this.browser);
+            setInterval(async () => {
+                const result = await monitoringInstance.monitore();
+                this.exporter.processResult(result, target);
+            }, target.interval);
         });
     }
 }

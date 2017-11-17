@@ -1,9 +1,14 @@
 targets:
-  - name: test-dna-wapi
+  - name: ubisoft.com
     type: "spa"
     url: "https://ubisoft.com"
     interval: 10000
-
+    headers: 
+      "x-test": "test"
+  - name: coinbase.com
+    type: "api"
+    url: "https://api.coinbase.com/v2/prices/CAD/spot"
+    interval: 10000
 
 exports:
   - type: httpServer
@@ -13,5 +18,5 @@ exports:
 
 gato:
   chromium:
-    headless: false
+    headless: true
     ignoreCertificateErrors: true
