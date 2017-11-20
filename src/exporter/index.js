@@ -6,15 +6,18 @@ class Exporter {
         this.allStatus = {};
         this.httpMode = false;
         this.exporters = [];
+        this.init(exportersConfig);
+    }
+    init(exportersConfig) {
         exportersConfig.forEach((exporterConfig) => {
             const key = exporterConfig.type;
             let plugins;
-            if (!key) throw 'Exporter type is missing'
+            if (!key) throw 'Exporter type is missing';
+            const pluginsPath = `./plugins/${key.trim()}/index.js`;
             try {
-                plugins = require(`./plugins/${key.trim()}/index.js`);
+                plugins = require(pluginsPath);
             } catch (e) {
-
-                console.log(e);
+                logger.log({ level: levels.warn, message: `Exporter::init - Plugins "${pluginsPath}" is not found, fallbacking to "${key}"` });
                 try {
                     plugins = require(key);
                 } catch (e) {
@@ -23,7 +26,7 @@ class Exporter {
                 }
             }
             this.exporters.push(new plugins.default(exporterConfig));
-        })
+        });
     }
     processResult(result, target) {
         this.exporters.forEach((exporter) => {
