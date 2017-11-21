@@ -31,7 +31,7 @@ class ApiMonitoring {
       };
       return result;
     } catch (err) {
-      logger.log({ level: levels.error, message: `ApiMonitoring::monitore - ${this.target.name} - ${err.toString()}` });
+      logger.log({ level: levels.error, message: `ApiMonitoring::monitore - ${this.target.name} - ${err}` });
       const result = {
         status: 0,
         loadingTime: 0,

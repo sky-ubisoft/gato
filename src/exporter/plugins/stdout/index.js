@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { logger, levels } = require('../../../logger');
 
 const schema = Joi.object().keys({
     pretty: Joi.boolean().default(false),
@@ -13,10 +14,10 @@ class StdoutExporter {
         this.pretty = this.config.pretty;
     }
     process(result, target) {
-        if (!this.pretty) {
-            console.log(result);
+        if (this.pretty) {
+            logger.log({ level: levels.info, message: JSON.stringify(result, null, 2) });
         } else {
-            console.dir(result, { depth: null, colors: true })
+            logger.log({ level: levels.info, message: result });
         }
     }
 }
