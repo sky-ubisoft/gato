@@ -9,6 +9,10 @@ targets:
     type: "api"
     url: "https://api.coinbase.com/v2/prices/CAD/spot"
     interval: 10000
+  - name: coinbase.com error
+    type: "api"
+    url: "https://wrong-api.com"
+    interval: 10000
 
 exports:
   - type: httpServer
