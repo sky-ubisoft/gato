@@ -45,10 +45,10 @@ class InfluxDbExporter {
     }
 
     async process(result, target) {
-        const db = this.influx[target.type.toLoweCase()];
+        const db = this.influx[target.type.toLowerCase()];
         if (!db) {
             db = this.instantiateDb(result, target);
-            this.influx[target.type.toLoweCase()] = db;
+            this.influx[target.type.toLowerCase()] = db;
         }
         result = this.sanitize(result);
         try {
