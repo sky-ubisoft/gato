@@ -22,6 +22,7 @@ class Monitoring {
             }
             const monitoringInstance = new MonitoringPlugin(target, this.exporter, this.browser);
             setInterval(async () => {
+                logger.log({ level: levels.debug, message: `Monitoring::start - ${target.name}` });                
                 const result = await monitoringInstance.monitore();
                 this.exporter.processResult(result, target);
             }, target.interval);
