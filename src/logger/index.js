@@ -1,10 +1,5 @@
 const winston = require('winston');
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json()
-});
-
 const levels = {
   error: 'error',
   warn: 'warn',
@@ -14,19 +9,21 @@ const levels = {
   silly: 'silly'
 };
 
-let consoleTransportConfig = {
-  format: winston.format.simple(),
-  level: 'error'
-}
-if (process.env.NODE_ENV !== 'production') {
-  consoleTransportConfig = {
-    format: winston.format.simple(),
-    level: 'info'
-  }
+const format = winston.format;
+
+const logger = winston.createLogger({
+  level: levels.info,
+  format: format.simple()
+});
+
+const consoleTransportConfig = {
+  level: process.env.NODE_ENV === 'production'
+    ? levels.info
+    : levels.debug
 }
 logger.add(new winston.transports.Console(consoleTransportConfig));
 
-module.exports  = {
+module.exports = {
   logger,
   levels
 };

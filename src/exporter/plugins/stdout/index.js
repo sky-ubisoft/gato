@@ -11,7 +11,7 @@ class StdoutExporter {
         const { error, value } = Joi.validate(config, schema);
         if (error) throw error
         this.config = value;
-        this.pretty = this.config.pretty;
+        this.pretty = !!this.config.pretty;
     }
     process(result, target) {
         if (this.pretty) {
