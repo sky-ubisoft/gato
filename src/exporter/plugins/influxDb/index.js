@@ -10,7 +10,6 @@ const schema = Joi.object().keys({
     type: Joi.string()
 });
 
-
 class InfluxDbExporter {
     constructor(config) {
         const { error, value } = Joi.validate(config, schema);
@@ -45,7 +44,7 @@ class InfluxDbExporter {
     }
 
     async process(result, target) {
-        const db = this.influx[target.type.toLowerCase()];
+        let db = this.influx[target.type.toLowerCase()];
         if (!db) {
             db = this.instantiateDb(result, target);
             this.influx[target.type.toLowerCase()] = db;
@@ -81,13 +80,13 @@ class InfluxDbExporter {
         const fields = {};
         for (var key in result) {
             if (typeof (result[key]) === "number") {
-                field[key] = Influx.FieldType.FLOAT;
+                fields[key] = Influx.FieldType.FLOAT;
             }
             if (typeof (result[key]) === "string") {
-                field[key] = Influx.FieldType.STRING;
+                fields[key] = Influx.FieldType.STRING;
             }
             if (typeof (result[key]) === "boolean") {
-                field[key] = Influx.FieldType.INTEGER;
+                fields[key] = Influx.FieldType.INTEGER;
             }
         }
 
@@ -98,7 +97,7 @@ class InfluxDbExporter {
             schema: [
                 {
                     measurement: target.type,
-                    fields: fields,
+                    fields,
                     tags: [
                         'service'
                     ]
