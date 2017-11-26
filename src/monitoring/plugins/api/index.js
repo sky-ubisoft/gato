@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const { logger, levels } = require('../../../logger');
 const request = require('superagent');
+const { getTime } = require('../../../tools/helpers');
 
 const schema = Joi.object().keys({
   name: Joi.string().required(),
@@ -18,13 +19,13 @@ class ApiMonitoring {
     this.exporter = exporter;
   }
   async monitore() {
+    const startTime = getTime();
     try {
-      const startLoad = Date.now();
       const data = await request(this.target.url)
         .set(this.target.headers);
       const result = {
         status: data.status,
-        loadingTime: Date.now() - startLoad,
+        loadingTime: getTime() - startTime,
         url: this.target.url,
         name: this.target.name,
         ok: data.ok
@@ -34,6 +35,7 @@ class ApiMonitoring {
       logger.log({ level: levels.error, message: `ApiMonitoring::monitore - ${this.target.name} - ${err}` });
       const result = {
         status: 0,
+        timestamp: startTime,
         loadingTime: 0,
         url: this.target.url,
         name: this.target.name,

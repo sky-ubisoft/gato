@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const { logger, levels } = require('../../../logger');
+const { getTime } = require('../../../tools/helpers');
 
 function delay(t) {
   return new Promise(function (resolve) {
@@ -29,21 +30,27 @@ class SpaMonitoring {
     let result;
 
     try {
-      const startLoad = Date.now();
+      const startTime = getTime();
       page = await this.browser.newPage();
 
       Object.keys(this.target.headers).map(headerName => {
         page.setExtraHTTPHeaders({ [headerName]: this.target.headers[headerName] });
       });
 
-      const response = await page.goto(this.target.url, { 'waitUntil': 'networkidle', 'timeout': 3000000 });
+      const response = await page.goto(this.target.url, { 'waitUntil': 'networkidle2', 'timeout': 3000000 });
+
+      const reponseTime = getTime();
+
+      const perf = await page.metrics();
 
       result = {
         status: response.status,
-        loadingTime: Date.now() - startLoad,
+        timestamp: startTime,
+        loadingTime: reponseTime - startTime,
         url: this.target.url,
         name: this.target.name,
-        ok: response.ok
+        ok: response.ok,
+        perf
       };
 
       return result
