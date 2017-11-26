@@ -1,5 +1,5 @@
 const puppeteer = require('puppeteer');
-const { logger, levels } = require('./logger');
+const { logger, levels } = require('../logger');
 
 class BrowserFactory {
     constructor({ chromium }) {
