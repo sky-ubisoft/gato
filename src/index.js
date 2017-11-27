@@ -1,8 +1,8 @@
 
 const { Exporter } = require('./exporter');
 const { Monitoring } = require('./monitoring');
-const { ConfigValidator } = require('./configValidator');
-const { BrowserFactory } = require('./browserFactory.js');
+const { ConfigValidator } = require('./tools/configValidator');
+const { BrowserFactory } = require('./tools/browserFactory.js');
 const { logger, levels } = require('./logger');
 
 var argv = require('minimist')(process.argv.slice(2));
