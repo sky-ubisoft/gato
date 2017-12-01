@@ -28,7 +28,8 @@ class ApiMonitoring {
         loadingTime: getTime() - startTime,
         url: this.target.url,
         name: this.target.name,
-        ok: data.ok
+        ok: data.ok,
+        body: data.body
       };
       return result;
     } catch (err) {

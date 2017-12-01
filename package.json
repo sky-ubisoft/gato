@@ -7,7 +7,7 @@
     "gato": "bin/gato"
   },
   "scripts": {
-    "start": "node src/index.js -c exemple/config.yml"
+    "start": "node bin/gato -c exemple/config.yml"
   },
   "author": "",
   "license": "ISC",
@@ -20,5 +20,8 @@
     "superagent": "^3.8.1",
     "winston": "^3.0.0-rc1",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "jest": "^21.2.1"
   }
 }
