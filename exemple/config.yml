@@ -1,18 +1,18 @@
 targets:
-  - name: ubisoft.com
-    type: "spa"
-    url: "https://ubisoft.com"
-    interval: 10000
-    headers: 
-      "x-test": "test"
+  # - name: ubisoft.com
+  #   type: "spa"
+  #   url: "https://ubisoft.com"
+  #   interval: 10000
+  #   headers: 
+  #     "x-test": "test"
   - name: coinbase.com
     type: "api"
-    url: "https://api.coinbase.com/v2/prices/CAD/spot"
-    interval: 10000
-  - name: coinbase.com error
-    type: "api"
-    url: "https://wrong-api.com"
-    interval: 10000
+    url: "https://test-dna-wapi.ubisoft.org/status"
+    interval: 4000
+  # - name: coinbase.com error
+  #   type: "api"
+  #   url: "https://wrong-api.com"
+  #   interval: 10000
 
 exports:
   - type: httpServer

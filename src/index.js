@@ -1,17 +1,16 @@
-
 const { Exporter } = require('./exporter');
 const { Monitoring } = require('./monitoring');
 const { ConfigValidator } = require('./tools/configValidator');
-const { BrowserFactory } = require('./tools/browserFactory.js');
+const { BrowserFactory } = require('./tools/browserFactory');
 const { logger, levels } = require('./logger');
 
 const start = (configPath) => {
-    var argv = require('minimist')(process.argv.slice(2));
-    if (!argv.c) throw "-c Config file is needed"
+    const argv = require('minimist')(process.argv.slice(2));
+    configPath = configPath || argv.c;
+    if (!configPath) throw new Error('-c Config file is needed')
 
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-    configPath = configPath || argv.c;
     const configValidator = new ConfigValidator(configPath);
     const config = configValidator.getConfig();
     const browserFactory = new BrowserFactory(config.gato);
