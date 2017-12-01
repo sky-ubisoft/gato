@@ -39,7 +39,8 @@ class ApiMonitoring {
         loadingTime: 0,
         url: this.target.url,
         name: this.target.name,
-        ok: false
+        ok: false,
+        err
       };
       return result;
     }
