@@ -19,6 +19,11 @@ exports:
     port: 8080
   - type: stdout
     pretty: true
+  - type: influxDb
+    host: "localhost"
+    database: "GATO"
+    measurement: "load"
+
 
 gato:
   chromium:

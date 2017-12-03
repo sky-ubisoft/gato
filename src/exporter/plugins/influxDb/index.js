@@ -1,4 +1,4 @@
-const Influx = require('influx');
+const { InfluxDB, FieldType } = require('influx');
 const Joi = require('joi');
 const { logger, levels } = require('../../../logger');
 
@@ -16,38 +16,26 @@ class InfluxDbExporter {
         if (error) throw error;
         this.config = value;
 
-        this.measurement = config.measurement;
-        this.influx = {};
-        this.influx = new Influx.InfluxDB({
-            host: this.config.host,
-            port: this.config.port,
-            database: this.config.database,
-            schema: [
-                {
-                    measurement: this.config.measurement,
-                    fields: {
-                        status: Influx.FieldType.INTEGER,
-                        loadingTime: Influx.FieldType.INTEGER,
-                        loadEvent: Influx.FieldType.INTEGER,
-                        url: Influx.FieldType.STRING,
-                        name: Influx.FieldType.STRING,
-                        jsError: Influx.FieldType.INTEGER,
-                        ok: Influx.FieldType.INTEGER
-                    },
-                    tags: [
-                        'service'
-                    ]
-                }
-            ]
-        })
+        this.influx = this.instantiateDb({
+            status: FieldType.INTEGER,
+            loadingTime: FieldType.INTEGER,
+            loadEvent: FieldType.INTEGER,
+            url: FieldType.STRING,
+            name: FieldType.STRING,
+            jsError: FieldType.INTEGER,
+            ok: FieldType.INTEGER
+        }, config.measurement);
         process.on('exit', () => this.influx.close());
     }
 
     async process(result, target) {
-        let db = this.influx[target.type.toLowerCase()];
+        const targetType = target.type.toLowerCase();
+        let db = this.influx[targetType];
         if (!db) {
-            db = this.instantiateDb(result, target);
-            this.influx[target.type.toLowerCase()] = db;
+            db = this.instantiateDb(
+                this.prepareInfluxFields(result),
+                target.type);
+            this.influx[targetType] = db;
         }
         result = this.sanitize(result);
         try {
@@ -76,34 +64,38 @@ class InfluxDbExporter {
 
         return resultClean
     }
-    instantiateDb(result, target) {
+    prepareInfluxFields(result) {
         const fields = {};
         for (var key in result) {
             if (typeof (result[key]) === "number") {
-                fields[key] = Influx.FieldType.FLOAT;
+                fields[key] = FieldType.FLOAT;
             }
             if (typeof (result[key]) === "string") {
-                fields[key] = Influx.FieldType.STRING;
+                fields[key] = FieldType.STRING;
             }
             if (typeof (result[key]) === "boolean") {
-                fields[key] = Influx.FieldType.INTEGER;
+                fields[key] = FieldType.INTEGER;
             }
         }
-
-        return new Influx.InfluxDB({
+        return fields;
+    }
+    instantiateDb(fields, measurement) {
+        const influxInstance = new InfluxDB({
             host: this.config.host,
             port: this.config.port,
             database: this.config.database,
             schema: [
                 {
-                    measurement: target.type,
+                    measurement,
                     fields,
                     tags: [
                         'service'
                     ]
                 }
             ]
-        })
+        });
+        process.on('exit', () => influxInstance.close());
+        return influxInstance;
     }
 }
 
