@@ -8,15 +8,19 @@ libxcursor1 libxdamage1 libxext6 libxfixes3 libxi6 libxrandr2 libxrender1 libxss
 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget && \
 apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
-COPY src /src
-COPY package.json /src
-
 RUN mkdir /etc/gato
+ARG config=/etc/gato/config.yml
+ENV GATO_CONFIG ${config}
 
+ADD ./src/ /dist/src
+ADD ./bin/ /dist/bin/
+ADD ./example/ /dist/example/
+ADD ./package.json /dist/
+WORKDIR /dist
 
-WORKDIR /src
+EXPOSE 80
 
-RUN npm install --verbose
+RUN npm install
 
-CMD ["node", "bin/gato" ,"-c", "/etc/gato/config.yml"]
+CMD node bin/gato -c ${GATO_CONFIG}
 
