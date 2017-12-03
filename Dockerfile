@@ -18,5 +18,5 @@ WORKDIR /src
 
 RUN npm install --verbose
 
-CMD ["node", "index.js" ,"-c", "/etc/gato/config.yml"]
+CMD ["node", "bin/gato" ,"-c", "/etc/gato/config.yml"]
 
