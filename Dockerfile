@@ -9,8 +9,7 @@ ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils 
 apt-get clean && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir /etc/gato
-ARG config=/etc/gato/config.yml
-ENV GATO_CONFIG ${config}
+ENV GATO_CONFIG=/etc/gato/config.yml
 
 ADD ./src/ /dist/src
 ADD ./bin/ /dist/bin/
