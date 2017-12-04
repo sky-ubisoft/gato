@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceRoot}/bin/gato",
-      "args": [ "-c", "exemple/config.yml" ]
+      "args": [ "-c", "example/config.yml" ]
     }
   ]
 }

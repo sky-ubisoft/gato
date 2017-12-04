@@ -32,21 +32,22 @@ class InfluxDbExporter {
         const targetType = target.type.toLowerCase();
         let db = this.influx[targetType];
         if (!db) {
-            db = this.instantiateDb(
+            this.influx[targetType] = this.instantiateDb(
                 this.prepareInfluxFields(result),
-                target.type);
-            this.influx[targetType] = db;
+                target.type
+            );
+            logger.log({ level: levels.debug, message: `InfluxDbExporter::process - instantiate new measurement "${target.type}"` });            
         }
         result = this.sanitize(result);
         try {
-            const data = await this.influx.writePoints([
-                {
-                    measurement: target.type,
-                    tags: { service: target.name },
-                    fields: result,
-                }
-            ]);
+            const points = [{
+                measurement: target.type,
+                tags: { service: target.name },
+                fields: result,
+            }];
+            const data = await this.influx.writePoints(points);
             logger.log({ level: levels.info, message: `InfluxDbExporter::process - ${target.name}` });
+            logger.log({ level: levels.debug, message: `InfluxDbExporter::process - ${JSON.stringify(points)}` });
         } catch (err) {
             logger.log({ level: levels.error, message: `InfluxDbExporter::process - ${target.name} - ${err}` });
         }
