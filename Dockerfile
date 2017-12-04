@@ -18,7 +18,7 @@ ADD ./example/ /dist/example/
 ADD ./package.json /dist/
 WORKDIR /dist
 
-EXPOSE 80
+EXPOSE 8080
 
 RUN npm install
 
