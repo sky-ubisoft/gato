@@ -7,7 +7,7 @@
     "gato": "bin/gato"
   },
   "scripts": {
-    "start": "node bin/gato -c exemple/config.yml",
+    "start": "node bin/gato -c example/config.yml",
     "test": "node_modules/.bin/jest --coverage"
   },
   "author": "",

@@ -34,7 +34,7 @@ describe('index.js', () => {
             expect(() => start()).toThrow(new Error('-c Config file is needed'));
         });
         test('start is successfull with method parameter and start monitoring', () => {
-            start('./exemple/config.yml');
+            start('./example/config.yml');
         });
     })
 })
