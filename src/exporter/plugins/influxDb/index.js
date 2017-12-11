@@ -42,7 +42,7 @@ class InfluxDbExporter {
         try {
             const points = [{
                 measurement: target.type,
-                tags: { service: target.name, host: 'gato' },
+                tags: { service: target.name, host: require('os').hostname },
                 fields: result,
             }];
             logger.log({ level: levels.silly, message: `InfluxDbExporter::process - points: ${JSON.stringify(points)}` });
