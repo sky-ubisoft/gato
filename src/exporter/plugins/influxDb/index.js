@@ -49,12 +49,6 @@ class InfluxDbExporter {
             
             await this.influx.writePoints(points);
             logger.log({ level: levels.info, message: `InfluxDbExporter::process - service: ${target.name}` });
-
-            const dataCheckRequest = `select * from ${target.type} where ("service" =~ /^${target.name}$/) order by time desc limit 1`;
-            logger.log({ level: levels.silly, message: `InfluxDbExporter::process - data-check-request: ${dataCheckRequest}` });            
-            const dataCheck = await this.influx.query(dataCheckRequest);
-            logger.log({ level: levels.debug, message: `InfluxDbExporter::process - data-check: ${JSON.stringify(dataCheck)}` });
-
         } catch (err) {
             logger.log({ level: levels.error, message: `InfluxDbExporter::process - service: ${target.name} - ${err}` });
         }
