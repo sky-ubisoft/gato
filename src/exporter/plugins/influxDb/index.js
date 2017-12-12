@@ -42,14 +42,15 @@ class InfluxDbExporter {
         try {
             const points = [{
                 measurement: target.type,
-                tags: { service: target.name },
+                tags: { service: target.name, host: require('os').hostname },
                 fields: result,
             }];
-            const data = await this.influx.writePoints(points);
-            logger.log({ level: levels.info, message: `InfluxDbExporter::process - ${target.name}` });
-            logger.log({ level: levels.debug, message: `InfluxDbExporter::process - ${JSON.stringify(points)}` });
+            logger.log({ level: levels.silly, message: `InfluxDbExporter::process - points: ${JSON.stringify(points)}` });
+            
+            await this.influx.writePoints(points);
+            logger.log({ level: levels.info, message: `InfluxDbExporter::process - service: ${target.name}` });
         } catch (err) {
-            logger.log({ level: levels.error, message: `InfluxDbExporter::process - ${target.name} - ${err}` });
+            logger.log({ level: levels.error, message: `InfluxDbExporter::process - service: ${target.name} - ${err}` });
         }
     }
     sanitize(result) {
