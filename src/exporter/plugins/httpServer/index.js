@@ -3,18 +3,23 @@ const Joi = require('joi');
 const app = express();
 const { logger, levels } = require('../../../logger');
 
+const DEFAULT_PORT = 8080;
+
 const schema = Joi.object().keys({
-    port: Joi.number().default(8080),
-    type: Joi.string()
+    port: Joi.number().default(DEFAULT_PORT),
+    type: Joi.string().valid('httpServer')
 });
 
 class HttpServerExporter {
     constructor(config) {
         const { error, value } = Joi.validate(config, schema);
-        if (error) throw error
+        if (error) {
+            logger.log({ level: levels.error, message: `HttpServerExporter:: Config validation error: ${error}` });            
+            throw error;
+        }        
         this.config = value;
         this.allStatus = {};
-        const port = this.config.port || process.env.PORT || 8080;
+        const port = this.config.port || process.env.PORT || DEFAULT_PORT;
         app.get('/', (req, res) => {
             res.send(this.allStatus)
         });

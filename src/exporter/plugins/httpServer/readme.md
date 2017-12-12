@@ -12,5 +12,5 @@ This plugins allow your to export data to a root REST endpoint
 
 | Name  |Type|Description|Required|
 |---|----|-----------|--------|
-|*port*|`string`||8080|
+|*port*|`string`|server port to use|No, default: 8080|
 
