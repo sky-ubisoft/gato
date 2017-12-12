@@ -3,13 +3,16 @@ const { logger, levels } = require('../../../logger');
 
 const schema = Joi.object().keys({
     pretty: Joi.boolean().default(false),
-    type: Joi.string()
+    type: Joi.string().valid('stdout')
 });
 
 class StdoutExporter {
     constructor(config) {
         const { error, value } = Joi.validate(config, schema);
-        if (error) throw error
+        if (error) {
+            logger.log({ level: levels.error, message: `StdoutExporter:: Config validation error: ${error}` });            
+            throw error;
+        }
         this.config = value;
         this.pretty = !!this.config.pretty;
     }

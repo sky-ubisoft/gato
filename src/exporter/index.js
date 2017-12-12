@@ -1,4 +1,6 @@
 const { logger, levels } = require('../logger');
+const path = require('path');
+const test = require('./plugins/status');
 
 class Exporter {
     constructor(exportersConfig) {
@@ -13,7 +15,7 @@ class Exporter {
             const key = exporterConfig.type;
             let plugins;
             if (!key) throw 'Exporter type is missing';
-            const pluginsPath = `./plugins/${key.trim()}/index.js`;
+            const pluginsPath = path.join(__dirname, `./plugins/${key.trim()}/index.js`);
             try {
                 plugins = require(pluginsPath);
             } catch (e) {
@@ -21,7 +23,7 @@ class Exporter {
                 try {
                     plugins = require(key);
                 } catch (e) {
-                    logger.log({ level: levels.error, message: `Exporter::constuctor - Plugins ${key} is not found, please install it - ${e.toString()}` });
+                    logger.log({ level: levels.error, message: `Exporter::init - Plugins ${key} is not found, please install it - ${e.toString()}` });
                     process.exit(e.code);
                 }
             }

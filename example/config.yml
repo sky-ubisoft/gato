@@ -23,7 +23,9 @@ exports:
     host: "localhost"
     database: "GATO"
     measurement: "load"
-
+  - type: status
+    url: https://requestb.in/10iwmnl1
+    monitorings: ['spa', 'api']
 
 gato:
   chromium:

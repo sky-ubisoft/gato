@@ -7,13 +7,16 @@ const schema = Joi.object().keys({
     database: Joi.string().required(),
     measurement: Joi.string().required(),
     port: Joi.number().default(8086),
-    type: Joi.string()
+    type: Joi.string().valid('influxDb')
 });
 
 class InfluxDbExporter {
     constructor(config) {
         const { error, value } = Joi.validate(config, schema);
-        if (error) throw error;
+        if (error) {
+            logger.log({ level: levels.error, message: `InfluxDbExporter:: Config validation error: ${error}` });            
+            throw error;
+        }
         this.config = value;
 
         this.influx = this.instantiateDb({
