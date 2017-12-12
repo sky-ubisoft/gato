@@ -24,7 +24,6 @@ class StatusExporter {
             return;
         }
         try {
-            console.log('URL', this.config.url)
             const resulStr = JSON.stringify(result);
             const data = await request.post(this.config.url)
                 .set('Content-Type', 'application/json')
