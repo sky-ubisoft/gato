@@ -27,7 +27,7 @@ class Exporter {
                     process.exit(e.code);
                 }
             }
-            this.exporters.push(new plugins.default(exporterConfig));
+            this.exporters.push(new plugins.default(exporterConfig, { logger, levels }));
         });
     }
     processResult(result, target) {

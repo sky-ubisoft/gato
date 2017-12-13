@@ -28,7 +28,7 @@ class InfluxDbExporter {
             jsError: FieldType.INTEGER,
             ok: FieldType.INTEGER
         }, config.measurement);
-        process.on('exit', () => this.influx.close());
+        process.on('exit', () => this.influx && this.influx.close());
     }
 
     async process(result, target) {
@@ -99,7 +99,7 @@ class InfluxDbExporter {
                 }
             ]
         });
-        process.on('exit', () => influxInstance.close());
+        process.on('exit', () => influxInstance && influxInstance.close());
         return influxInstance;
     }
 }
