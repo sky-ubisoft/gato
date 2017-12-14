@@ -46,7 +46,7 @@ class SpaMonitoring {
 
       result = {
         status: response.status,
-        timestamp: startTime,
+        timestamp: new Date().toISOString(),
         loadingTime: reponseTime - startTime,
         url: this.target.url,
         name: this.target.name,

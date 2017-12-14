@@ -26,7 +26,7 @@ class ApiMonitoring {
         .set(this.target.headers);
       const result = {
         status: data.status,
-        timestamp: startTime,
+        timestamp: new Date().toISOString(),
         loadingTime: getTime() - startTime,
         url: this.target.url,
         name: this.target.name,
