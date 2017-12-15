@@ -30,7 +30,8 @@ class SpaMonitoring {
     let page;
     let result;
 
-    try {
+    try {    
+      const timestamp = Date.now();      
       const startTime = getTime();
       page = await this.browser.newPage();
 
@@ -46,7 +47,7 @@ class SpaMonitoring {
 
       result = {
         status: response.status,
-        timestamp: new Date().toISOString(),
+        timestamp,
         loadingTime: reponseTime - startTime,
         url: this.target.url,
         name: this.target.name,
@@ -60,11 +61,12 @@ class SpaMonitoring {
       result = {
         status: 0,
         loadingTime: 0,
+        timestamp,
         url: this.target.url,
         name: this.target.name,
         ok: false
       }
-      return result
+      return result;
     }
   }
 }

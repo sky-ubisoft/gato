@@ -21,12 +21,13 @@ class ApiMonitoring {
   }
   async monitore() {
     const startTime = getTime();
+    const timestamp = Date.now();
     try {
       const data = await request(this.target.url)
         .set(this.target.headers);
       const result = {
         status: data.status,
-        timestamp: new Date().toISOString(),
+        timestamp,
         loadingTime: getTime() - startTime,
         url: this.target.url,
         name: this.target.name,
@@ -38,7 +39,7 @@ class ApiMonitoring {
       logger.log({ level: levels.error, message: `ApiMonitoring::monitore - ${this.target.name} - ${err}` });
       const result = {
         status: 0,
-        timestamp: startTime,
+        timestamp,
         loadingTime: 0,
         url: this.target.url,
         name: this.target.name,
