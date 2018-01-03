@@ -12,7 +12,7 @@ const schema = Joi.object().keys({
   name: Joi.string().required(),
   type: Joi.string().valid('spa'),
   url: Joi.string().required(),
-  env: Joi.string().default('test'),
+  tags: Joi.object().default({}),
   interval: Joi.number().default(30 * 1000),
   performance: Joi.boolean().default(false),
   headers: Joi.object().default({})

@@ -5,7 +5,6 @@ const { logger, levels } = require('../../../logger');
 const schema = Joi.object().keys({
     host: Joi.string().required(),
     database: Joi.string().required(),
-    measurement: Joi.string().required(),
     port: Joi.number().default(8086),
     type: Joi.string().valid('influxDb')
 });
@@ -44,7 +43,7 @@ class InfluxDbExporter {
         try {
             const points = [{
                 measurement: target.type,
-                tags: { service: target.name, host: require('os').hostname },
+                tags: { service: target.name },
                 fields: result,
             }];
             logger.log({ level: levels.silly, message: `InfluxDbExporter::process - points: ${JSON.stringify(points)}` });
