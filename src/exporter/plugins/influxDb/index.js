@@ -17,16 +17,7 @@ class InfluxDbExporter {
             throw error;
         }
         this.config = value;
-
-        this.influx = this.instantiateDb({
-            status: FieldType.INTEGER,
-            loadingTime: FieldType.INTEGER,
-            loadEvent: FieldType.INTEGER,
-            url: FieldType.STRING,
-            name: FieldType.STRING,
-            jsError: FieldType.INTEGER,
-            ok: FieldType.INTEGER
-        }, config.measurement);
+        this.influx = {};
     }
 
     async process(result, target) {
