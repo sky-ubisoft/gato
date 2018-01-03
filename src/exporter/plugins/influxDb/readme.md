@@ -9,7 +9,6 @@ This plugins allow your to export data to influxdb
 		    database: mybd.foo.com
 		    port: 8086
 		    database: gato
-		    measurement: loadingtime
 
 ### Options ###
 
@@ -17,6 +16,5 @@ This plugins allow your to export data to influxdb
 |---|----|-----------|--------|
 |*host*|`string`||True|
 |*database*|`string`||True|
-|*measurement*|`string`||True|
 |*port*|`integer`||No, default: `8086`|
 
