@@ -39,7 +39,7 @@ class InfluxDbExporter {
             }];
             logger.log({ level: levels.silly, message: `InfluxDbExporter::process - points: ${JSON.stringify(points)}` });
             
-            await this.influx.writePoints(points);
+            await this.influx[targetType].writePoints(points);
             logger.log({ level: levels.info, message: `InfluxDbExporter::process - service: ${target.name}` });
         } catch (err) {
             logger.log({ level: levels.error, message: `InfluxDbExporter::process - service: ${target.name} - ${err}` });
