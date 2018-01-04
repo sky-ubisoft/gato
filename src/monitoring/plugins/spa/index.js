@@ -28,11 +28,9 @@ class SpaMonitoring {
   }
   async monitore() {
     let page;
-    let result;
-
+    const timestamp = Date.now();      
+    const startTime = getTime();    
     try {    
-      const timestamp = Date.now();      
-      const startTime = getTime();
       page = await this.browser.newPage();
 
       Object.keys(this.target.headers).map(headerName => {
@@ -45,7 +43,7 @@ class SpaMonitoring {
 
       const perf = await page.metrics();
 
-      result = {
+      const result = {
         status: response.status,
         timestamp,
         loadingTime: reponseTime - startTime,
@@ -58,7 +56,7 @@ class SpaMonitoring {
       return result
     } catch (error) {
       logger.log({ level: levels.error, message: `SpaMonitoring::monitore - ${this.target.name} - ${error.toString()}` });
-      result = {
+      const result = {
         status: 0,
         loadingTime: 0,
         timestamp,
