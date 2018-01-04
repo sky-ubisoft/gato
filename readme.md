@@ -24,7 +24,7 @@ Gato is plugin-driven and has the concept of 2 distinct plugins:
 * [HttpServer](./src/exporter/plugins/httpServer)
 * [Console](./src/exporter/plugins/stdout)
 
-Exemple
+Example
 -------------
 Gato is a nodejs app, you will need node 6 minimum to run it.
 
