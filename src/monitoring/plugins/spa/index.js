@@ -2,12 +2,6 @@ const Joi = require('joi');
 const { logger, levels } = require('../../../logger');
 const { getTime } = require('../../../tools/helpers');
 
-function delay(t) {
-  return new Promise(function (resolve) {
-    setTimeout(resolve, t)
-  });
-}
-
 const schema = Joi.object().keys({
   name: Joi.string().required(),
   type: Joi.string().valid('spa'),
@@ -26,42 +20,86 @@ class SpaMonitoring {
     this.exporter = exporter;
     this.browser = browser;
   }
+
+  async handleResult({ result, pageResponse = false, startTime, perf = {}, err = {} }) {
+    const reponseTime = getTime();
+    return {
+      ...result,
+      status: pageResponse && pageResponse.status,
+      loadingTime: reponseTime - startTime,
+      ok: pageResponse && pageResponse.ok,
+      perf,
+      err
+    };
+  }
+
+  async handleError({ err, page, result, resolve, startTime }) {
+    logger.log({ level: levels.error, message: `SpaMonitoring::monitore - ${this.target.name} - error happen at the page: ${err}` });
+    return resolve(this.handleResult({ result, err, startTime }));
+  }
+
+  async handlePageError({ pageerr, page, result, resolve, startTime }) {
+    logger.log({ level: levels.error, message: `SpaMonitoring::monitore - ${this.target.name} - pageerror occurred: ${pageerr}` });
+    return resolve(this.handleResult({ result, err: pageerr, startTime }));
+  }
+
+  async handleLoad({ page, result, resolve, pageResponse, startTime }) {
+    const pageUrl = page.url();
+    if (pageUrl === "chrome-error://chromewebdata/") {
+      return;
+    }
+    const perf = await page.metrics();
+    logger.log({ level: levels.debug, message: `SpaMonitoring::monitore - page successfully loaded: ${page.url()}` });
+    return resolve(this.handleResult({ result, perf, pageResponse, startTime }));
+  }
+
   async monitore() {
     let page;
+    let result;
     const timestamp = Date.now();
     const startTime = getTime();
-    try {
-      page = await this.browser.newPage();
 
-      Object.keys(this.target.headers).map(headerName => {
-        page.setExtraHTTPHeaders({ [headerName]: this.target.headers[headerName] });
+    try {
+      return new Promise(async (resolve, reject) => {
+        let pageResponse;
+        page = await this.browser.newPage();
+
+        Object.keys(this.target.headers).map(headerName => {
+          page.setExtraHTTPHeaders({ [headerName]: this.target.headers[headerName] });
+        });
+
+        result = {
+          timestamp,
+          url: this.target.url,
+          name: this.target.name,
+        };
+
+        page.on('error', err => this.handleError({ err, result, resolve, startTime }));
+        page.on('pageerror', pageerr => this.handlePageError({ pageerr, result, resolve, startTime }));
+        page.on('response', data => {
+          return this.handleLoad({ page, result, resolve, data, startTime });
+        });
+        page.on('requestfailed', data => {
+          logger.log({ level: levels.error, message: `SpaMonitoring::monitore - page load error: ${this.target.url}` });
+          return resolve(this.handleResult({ result, pageResponse: data }));
+        });
+        page.on('load', () => {
+          return this.handleLoad({ page, result, resolve, startTime })
+        });
+
+        await page.goto(this.target.url, { 'waitUntil': 'networkidle2', 'timeout': 3000000 }).catch(err => {
+          reject(err);
+        });
+
+        await page.close();
       });
 
-      const response = await page.goto(this.target.url, { 'waitUntil': 'networkidle2', 'timeout': 3000000 });
-
-      const reponseTime = getTime();
-
-      const perf = await page.metrics();
-
-      page && await page.close();
-
-      const result = {
-        status: response.status,
-        timestamp,
-        loadingTime: reponseTime - startTime,
-        url: this.target.url,
-        name: this.target.name,
-        ok: response.ok,
-        perf
-      };
-
-      return result
     } catch (error) {
 
       page && await page.close();
 
       logger.log({ level: levels.error, message: `SpaMonitoring::monitore - ${this.target.name} - ${error.toString()}` });
-      const result = {
+      result = {
         status: 0,
         loadingTime: 0,
         timestamp,
@@ -69,7 +107,8 @@ class SpaMonitoring {
         name: this.target.name,
         ok: false
       }
-      return result;
+      return Promise.resolve(result);
+
     }
   }
 }

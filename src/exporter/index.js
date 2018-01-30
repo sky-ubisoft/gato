@@ -30,14 +30,18 @@ class Exporter {
             this.exporters.push(new plugins.default(exporterConfig, { logger, levels }));
         });
     }
-    prepProcessResult(result, target) {
+    prepProcessResult(target) {
         this.exporters.forEach((exporter) => {
-            exporter.preProcess(result, target);
+            if (exporter.preProcess) {
+                exporter.preProcess(target);
+            }
         });
     }
     processResult(result, target) {
         this.exporters.forEach((exporter) => {
-            exporter.process(result, target);
+            if (exporter.process) {
+                exporter.process(result, target);
+            }
         });
     }
 }
