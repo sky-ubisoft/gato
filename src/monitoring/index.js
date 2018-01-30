@@ -7,7 +7,7 @@ class Monitoring {
         this.browserFactory = browserFactory;
     }
     async start() {
-        this.browser = await this.browserFactory.getBrowser();        
+        this.browser = await this.browserFactory.getBrowser();
         this.targets.forEach(target => {
             let MonitoringPlugin;
             try {
