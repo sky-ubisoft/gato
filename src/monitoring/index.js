@@ -20,7 +20,7 @@ class Monitoring {
                     process.exit(e.code);
                 }
             }
-            this.exporter.prepPocessResult(result, target);
+            this.exporter.prepProcessResult(result, target);
             const monitoringInstance = new MonitoringPlugin(target, this.exporter, this.browser);
             setInterval(async () => {
                 logger.log({ level: levels.debug, message: `Monitoring::start - ${target.name}` });                
