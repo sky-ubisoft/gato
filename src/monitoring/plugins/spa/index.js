@@ -77,10 +77,10 @@ class SpaMonitoring {
         };
 
         page.on('error', err => {
-          this.handleError({ err, result, resolve, startTime })
+          this.handleError({ err, result, resolve, startTime });
         });
         page.on('pageerror', pageerr => {
-          this.handlePageError({ pageerr, result, resolve, startTime })
+          this.handlePageError({ pageerr, result, resolve, startTime });
         });
         page.on('load', () => {
           this.handleLoad({ page, result, resolve, startTime });
