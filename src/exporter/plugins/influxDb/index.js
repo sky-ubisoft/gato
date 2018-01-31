@@ -13,7 +13,7 @@ class InfluxDbExporter {
     constructor(config) {
         const { error, value } = Joi.validate(config, schema);
         if (error) {
-            logger.log({ level: levels.error, message: `InfluxDbExporter:: Config validation error: ${error}` });            
+            logger.log({ level: levels.error, message: `InfluxDbExporter:: Config validation error: ${error}` });
             throw error;
         }
         this.config = value;
@@ -28,7 +28,7 @@ class InfluxDbExporter {
                 this.prepareInfluxFields(result),
                 target.type
             );
-            logger.log({ level: levels.debug, message: `InfluxDbExporter::process - instantiate new measurement "${target.type}"` });            
+            logger.log({ level: levels.verbose, message: `InfluxDbExporter::process - instantiate new measurement "${target.type}"` });
         }
         result = this.sanitize(result);
         try {
@@ -37,8 +37,8 @@ class InfluxDbExporter {
                 tags: { service: target.name },
                 fields: result,
             }];
-            logger.log({ level: levels.silly, message: `InfluxDbExporter::process - points: ${JSON.stringify(points)}` });
-            
+            logger.log({ level: levels.verbose, message: `InfluxDbExporter::process - points: ${JSON.stringify(points)}` });
+
             await this.influx[targetType].writePoints(points);
             logger.log({ level: levels.info, message: `InfluxDbExporter::process - service: ${target.name}` });
         } catch (err) {

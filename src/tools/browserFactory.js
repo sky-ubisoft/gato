@@ -19,7 +19,7 @@ class BrowserFactory {
         };
     }
     getBrowser() {
-        logger.log({ level: levels.info, message: `BrowserFactory::getBrowser - ${this.args.toString()}` });
+        logger.log({ level: levels.verbose, message: `BrowserFactory::getBrowser - ${this.args.toString()}` });
         const browser = puppeteer.launch(this.config);
         process.on('exit', () => browser.close());
         return browser;

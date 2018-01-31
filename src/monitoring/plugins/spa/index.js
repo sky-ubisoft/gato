@@ -46,10 +46,12 @@ class SpaMonitoring {
   async handleLoad({ page, result, resolve, pageResponse, startTime }) {
     const pageUrl = page.url();
     if (pageUrl === "chrome-error://chromewebdata/") {
+      page && await page.close();
       return;
     }
     const perf = await page.metrics();
-    logger.log({ level: levels.debug, message: `SpaMonitoring::monitore - page successfully loaded: ${page.url()}` });
+    logger.log({ level: levels.verbose, message: `SpaMonitoring::monitore - page successfully loaded: ${page.url()}` });
+    page && await page.close();
     return resolve(this.handleResult({ result, perf, pageResponse, startTime }));
   }
 
@@ -74,24 +76,20 @@ class SpaMonitoring {
           name: this.target.name,
         };
 
-        page.on('error', err => this.handleError({ err, result, resolve, startTime }));
-        page.on('pageerror', pageerr => this.handlePageError({ pageerr, result, resolve, startTime }));
-        page.on('response', data => {
-          return this.handleLoad({ page, result, resolve, data, startTime });
+        page.on('error', err => {
+          this.handleError({ err, result, resolve, startTime })
         });
-        page.on('requestfailed', data => {
-          logger.log({ level: levels.error, message: `SpaMonitoring::monitore - page load error: ${this.target.url}` });
-          return resolve(this.handleResult({ result, pageResponse: data }));
+        page.on('pageerror', pageerr => {
+          this.handlePageError({ pageerr, result, resolve, startTime })
         });
         page.on('load', () => {
-          return this.handleLoad({ page, result, resolve, startTime })
+          this.handleLoad({ page, result, resolve, startTime });
         });
 
-        await page.goto(this.target.url, { 'waitUntil': 'networkidle2', 'timeout': 3000000 }).catch(err => {
+        await page.goto(this.target.url, { 'waitUntil': 'networkidle2', 'timeout': 3000000 }).catch(async (err) => {
+          page && await page.close();
           reject(err);
         });
-
-        await page.close();
       });
 
     } catch (error) {
