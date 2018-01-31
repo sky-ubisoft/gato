@@ -23,7 +23,6 @@ class Monitoring {
             this.exporter.prepProcessResult(target);
             const monitoringInstance = new MonitoringPlugin(target, this.exporter, this.browser);
             setInterval(async () => {
-                logger.log({ level: levels.debug, message: `Monitoring::start - ${target.name} - handling monitore()...` });
                 let result;
                 try {
                     result = await monitoringInstance.monitore();
@@ -32,7 +31,7 @@ class Monitoring {
                     if (result) {
                         logger.log({ level: levels.error, message: `Monitoring::start - ${JSON.stringify(err)}` });
                     } else {
-                        logger.log({ level: levels.debug, message: `Monitoring::start - ${target.name} - result from 'monitore()' is not defined` });
+                        logger.log({ level: levels.verbose, message: `Monitoring::start - ${target.name} - result from 'monitore()' is not defined` });
                     }
                 }
             }, target.interval);
