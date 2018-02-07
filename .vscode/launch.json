@@ -11,8 +11,9 @@
       "program": "${workspaceRoot}/bin/gato",
       "args": [ "-c", "example/config.yml" ],
       "env": {
-        "NODE_ENV": "production"
-      }
+        "NODE_ENV": "dev"
+      },
+      "console": "integratedTerminal"
     }
   ]
 }
