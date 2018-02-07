@@ -34,6 +34,7 @@ class ApiMonitoring {
         ok: data.ok,
         body: data.body
       };
+      logger.log({ level: levels.verbose, message: `ApiMonitoring::monitore - ${this.target.name} ok!` });
       return result;
     } catch (err) {
       logger.log({ level: levels.error, message: `ApiMonitoring::monitore - ${this.target.name} - ${err}` });
