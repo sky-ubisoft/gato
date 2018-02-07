@@ -8,20 +8,17 @@ const levels = {
   debug: 'debug',
   silly: 'silly'
 };
-
-const format = winston.format;
-
 const logger = winston.createLogger({
-  level: levels.info,
-  format: format.simple()
+  transports: [
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize(),
+        winston.format.simple()
+      ),
+      level: process.env.NODE_ENV !== 'production' ? 'verbose' : 'error'
+    })
+  ]
 });
-
-const consoleTransportConfig = {
-  level: process.env.NODE_ENV === 'production'
-    ? levels.info
-    : levels.debug
-}
-logger.add(new winston.transports.Console(consoleTransportConfig));
 
 module.exports = {
   logger,
