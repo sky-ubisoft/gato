@@ -18,10 +18,10 @@ class BrowserFactory {
             ignoreHTTPSErrors: chromium.ignoreCertificateErrors
         };
     }
-    getBrowser() {
+    async getBrowser() {
         logger.log({ level: levels.verbose, message: `BrowserFactory::getBrowser - ${this.args.toString()}` });
-        const browser = puppeteer.launch(this.config);
-        process.on('exit', () => browser.close());
+        const browser = await puppeteer.launch(this.config);
+        process.on('exit', async () => await browser.close());
         return browser;
     }
 }

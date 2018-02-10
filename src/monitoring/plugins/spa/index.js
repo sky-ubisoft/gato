@@ -15,13 +15,14 @@ const schema = Joi.object().keys({
 class SpaMonitoring {
   constructor(config, exporter, browser) {
     const { error, value } = Joi.validate(config, schema);
-    if (error) throw error
+    if (error) throw error;
+
     this.target = value;
     this.exporter = exporter;
     this.browser = browser;
   }
 
-  async handleResult({ result, pageResponse = false, startTime, perf = {}, err = {} }) {
+  async handleResult({ result, startTime, pageResponse = false, perf = {}, err = {} }) {
     const reponseTime = getTime();
     return {
       ...result,
@@ -86,6 +87,7 @@ class SpaMonitoring {
           this.handleLoad({ page, result, resolve, startTime });
         });
 
+        logger.log({ level: levels.verbose, message: `SpaMonitoring::monitore - ${this.target.name} - opening page '${this.target.url}'` });
         await page.goto(this.target.url, { 'waitUntil': 'networkidle2', 'timeout': 3000000 }).catch(async (err) => {
           page && await page.close();
           reject(err);
