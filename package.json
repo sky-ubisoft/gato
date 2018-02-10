@@ -18,6 +18,7 @@
     "joi": "^13.0.2",
     "minimist": "^1.2.0",
     "puppeteer": "^0.13.0",
+    "qrate": "^1.0.2",
     "superagent": "^3.8.2",
     "winston": "^3.0.0-rc1",
     "yamljs": "^0.3.0"
@@ -29,5 +30,8 @@
     "moduleFileExtensions": [
       "js"
     ]
+  },
+  "engines": {
+    "node": ">8.3.0"
   }
 }
