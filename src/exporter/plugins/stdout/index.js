@@ -10,7 +10,7 @@ class StdoutExporter {
     constructor(config) {
         const { error, value } = Joi.validate(config, schema);
         if (error) {
-            logger.log({ level: levels.error, message: `StdoutExporter:: Config validation error: ${error}` });            
+            logger.log({ level: levels.error, message: `StdoutExporter:: Config validation error: ${error}` });
             throw error;
         }
         this.config = value;
@@ -18,7 +18,7 @@ class StdoutExporter {
     }
     process(result, target) {
         if (this.pretty) {
-            logger.log({ level: levels.info, message: JSON.stringify(result, null, 2) });
+            logger.log({ level: levels.info, message: `${target.name}: ${JSON.stringify(result, null, 2)}` });
         } else {
             logger.log({ level: levels.info, message: result });
         }
