@@ -15,13 +15,13 @@ const start = (configPath) => {
     const config = configValidator.getConfig();
     const browserFactory = new BrowserFactory(config.gato);
     const exporter = new Exporter(config.exports);
-    const monitor = new Monitoring(config, exporter, browserFactory);
+    const monitoring = new Monitoring(config, exporter, browserFactory);
 
     process.on('uncaughtException', err =>
-        logger.log({ level: levels.error, message: `${err}` })
+        logger.log({ level: levels.error, message: `gato::start - ${err}` })
     );
 
-    monitor.start();
+    monitoring.start();
 };
 
 module.exports = { start };
