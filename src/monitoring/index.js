@@ -1,12 +1,14 @@
 const { logger, levels } = require('../logger');
 const qrate = require('qrate');
-const MAX_BROWSER_TABS = 3;
+const DEFAULT_CONCURRENCY = 3;
 
 class Monitoring {
-    constructor({ targets }, exporter, browserFactory) {
+    constructor({ targets, gato }, exporter, browserFactory) {
         this.exporter = exporter;
         this.targets = targets;
         this.browserFactory = browserFactory;
+        this.gato = gato;
+        this._queues = {};
     }
     async interval({ target, MonitoringPlugin, exporter, browser }) {
         let result;
@@ -25,9 +27,9 @@ class Monitoring {
 
     async start() {
         this.browser = await this.browserFactory.getBrowser();
-        this.queue = qrate(this.interval, MAX_BROWSER_TABS);
 
         this.targets.forEach(target => {
+            const monitoringTypeOptions = this.gato && this.gato.monitoring && this.gato.monitoring[target.type] ? this.gato.monitoring[target.type] : {};
             let MonitoringPlugin;
             try {
                 MonitoringPlugin = require(`./plugins/${target.type}`);
@@ -40,10 +42,12 @@ class Monitoring {
                     process.exit(e2.code);
                 }
             }
+            const concurrency = monitoringTypeOptions.jobConcurrency ? monitoringTypeOptions.jobConcurrency : DEFAULT_CONCURRENCY;
+            this._queues[target.type] = (qrate(this.interval, concurrency));
             this.exporter.prepProcessResult(target);
             setInterval(
                 ({ queue, browser, exporter }) => {
-                    logger.log({ level: levels.verbose, message: `Monitoring:: start - current queue length: ${queue.length()}` });
+                    logger.log({ level: levels.verbose, message: `Monitoring:: start - '${target.type}' queue: ${queue.length()}` });
                     queue.push({
                         target, MonitoringPlugin,
                         browser,
@@ -52,7 +56,7 @@ class Monitoring {
                 },
                 target.interval,
                 {
-                    queue: this.queue,
+                    queue: this._queues[target.type],
                     browser: this.browser,
                     exporter: this.exporter
                 }
