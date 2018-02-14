@@ -5,7 +5,8 @@ class BrowserFactory {
     constructor({ chromium }) {
         this.args = [
             '--no-sandbox',
-            '--disable-setuid-sandbox'
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage'
         ];
         this.headless = chromium.headless;
         if (chromium.ignoreCertificateErrors) {
